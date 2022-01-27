@@ -19,11 +19,12 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import LoginButton from './components/loginButton';
 
 const App = () => {
   const [loginMail, setLoginMail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-
+  const smt = () => {};
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome The Shopping List</Text>
@@ -44,10 +45,10 @@ const App = () => {
           placeholder="Password"
         />
         <Text style={styles.textGray}>Forgot Password?</Text>
-        <Button style={styles.login} title="Sign In" />
+        <LoginButton text="Sign In" />
       </View>
 
-      <View style={styles.viewBox}>
+      {/* <View style={styles.viewBox}>
         <Text style={styles.textGray}>Continue with</Text>
         <View style={styles.socialBox}>
           <Button style={styles.circleSocialButtons} title="Google" />
@@ -58,10 +59,11 @@ const App = () => {
             title="Facebook"
           />
         </View>
-        <Text>Don't you have an account?</Text>
-      </View>
+      </View> */}
 
-      <Text>Don't have an account? Signup</Text>
+      <Text style={styles.textGray}>
+        Don't have an account? <Text style={{color: primary}}>Signup</Text>
+      </Text>
     </View>
   );
 };
@@ -77,6 +79,7 @@ const primary = '#FDB849';
 const secondary = '#14213D';
 const dark = '#000000';
 const gray = 'gray';
+const third = '#e5e5e5';
 
 const styles = StyleSheet.create({
   container: {
@@ -85,35 +88,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: width_proportion,
     height: height_proportion,
-    backgroundColor:"white",
+    backgroundColor: 'white',
   },
   viewBox: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
+    marginBottom: 20,
   },
   title: {
     fontFamily: 'EuclidCircularB-SemiBold',
     fontWeight: '500',
     fontSize: 40,
     marginTop: 20,
-    color:dark,
+    color: dark,
+    width:260
   },
   loginInput: {
     color: gray,
-    borderRadius: 10,
-    borderColor: gray,
+    borderRadius: 7,
+    borderColor: third,
     borderWidth: 1,
+    fontSize: 12,
     backgroundColor: 'white',
-    width: 200,
+    width: 300,
+    height: 40,
     marginBottom: 10,
+    fontFamily: 'EuclidCircularB-Light',
+    fontWeight: '500',
   },
   textGray: {
     color: gray,
     fontFamily: 'EuclidCircularB-Light',
     fontWeight: '500',
     fontSize: 12,
+    marginTop:30,
     marginBottom: 10,
   },
   login: {
