@@ -20,7 +20,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          options={{animation: 'slide_from_left'}}
+          options={{animation: 'fade_from_bottom', headerShown: false}}
           name="Login"
           component={Login}
         />

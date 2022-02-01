@@ -42,7 +42,12 @@ const Login = ({navigation}) => {
       </View> */}
 
       <Text style={styles.textGray}>
-        Don't have an account? <Text style={{color: primary}}>Signup</Text>
+        Don't have an account?{' '}
+        <Text
+          style={{color: primary}}
+          onPress={() => navigation.navigate('SignUp')}>
+          Signup
+        </Text>
       </Text>
     </View>
   );
