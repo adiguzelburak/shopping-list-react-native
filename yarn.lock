@@ -1199,10 +1199,10 @@
   "resolved" "https://registry.npmjs.org/@react-native/polyfills/-/polyfills-2.0.0.tgz"
   "version" "2.0.0"
 
-"@react-navigation/core@^6.1.0":
-  "integrity" "sha512-LyZqD/ZCXSK9+ES8KiH+0tU+7aL84jUw1N9OxZfEuns/OcnSXKC3sOO+9NQ9XRowB1wLUfJhmqZ8G8rUlg33fQ=="
-  "resolved" "https://registry.npmjs.org/@react-navigation/core/-/core-6.1.0.tgz"
-  "version" "6.1.0"
+"@react-navigation/core@^6.1.1":
+  "integrity" "sha512-njysuiqztgvR1Z9Noxk2OGJfYtFGFDRyji5Vmm1jHzlql0m+q0wh1dUiyaIEtTyrhFXr/YNgdrKuiPaU9Jp8OA=="
+  "resolved" "https://registry.npmjs.org/@react-navigation/core/-/core-6.1.1.tgz"
+  "version" "6.1.1"
   dependencies:
     "@react-navigation/routers" "^6.1.0"
     "escape-string-regexp" "^4.0.0"
@@ -1223,13 +1223,14 @@
     "@react-navigation/elements" "^1.2.1"
     "warn-once" "^0.1.0"
 
-"@react-navigation/native@^6.0.0", "@react-navigation/native@^6.0.6":
-  "integrity" "sha512-XzL7YPsaRRQgdCQSXbA8PJWLN2I4lhUUvSFoKQPNO4DS6y8eqZI1V8COPYlJg8+tsetGV5J8jt+jVjWL7h6ZrQ=="
-  "resolved" "https://registry.npmjs.org/@react-navigation/native/-/native-6.0.6.tgz"
-  "version" "6.0.6"
+"@react-navigation/native@^6.0.0", "@react-navigation/native@^6.0.7":
+  "integrity" "sha512-TOLSVLU3BbqkSgaXDtxSIBEOLnKP54KMlu+D3KKfn2mmCGyBDChPIwqMKFMnkmR+N/URugicG8h7p0Hu21hA5A=="
+  "resolved" "https://registry.npmjs.org/@react-navigation/native/-/native-6.0.7.tgz"
+  "version" "6.0.7"
   dependencies:
-    "@react-navigation/core" "^6.1.0"
+    "@react-navigation/core" "^6.1.1"
     "escape-string-regexp" "^4.0.0"
+    "fast-deep-equal" "^3.1.3"
     "nanoid" "^3.1.23"
 
 "@react-navigation/routers@^6.1.0":
@@ -5553,12 +5554,12 @@
     "jscodeshift" "^0.11.0"
     "nullthrows" "^1.1.1"
 
-"react-native-safe-area-context@>= 3.0.0":
+"react-native-safe-area-context@^3.3.2", "react-native-safe-area-context@>= 3.0.0":
   "integrity" "sha512-yOwiiPJ1rk+/nfK13eafbpW6sKW0jOnsRem2C1LPJjM3tfTof6hlvV5eWHATye3XOpu2cJ7N+HdkUvUDGwFD2Q=="
   "resolved" "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-3.3.2.tgz"
   "version" "3.3.2"
 
-"react-native-screens@>= 3.0.0":
+"react-native-screens@^3.10.2", "react-native-screens@>= 3.0.0":
   "integrity" "sha512-bMKSpwMeqAoXBqTJiDEG1ogM1cMk66sEmpp/4dGqdX59v+OwMqPeTuBk37qaSuS7gPOFFKsNW2X3ymGvBT4iEw=="
   "resolved" "https://registry.npmjs.org/react-native-screens/-/react-native-screens-3.10.2.tgz"
   "version" "3.10.2"

@@ -6,73 +6,37 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
-import {
-  Button,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from 'react-native';
-import LoginButton from './components/loginButton';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const [loginMail, setLoginMail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const smt = () => {};
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome The Shopping List</Text>
-
-      <View style={styles.viewBox}>
-        <TextInput
-          style={styles.loginInput}
-          value={loginMail}
-          onChangeText={e => setLoginMail(e)}
-          keyboardType={'number-pad'}
-          placeholder="Email"
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{animation: 'slide_from_left'}}
+          name="Login"
+          component={Login}
         />
-        <TextInput
-          style={styles.loginInput}
-          value={loginPassword}
-          onChangeText={e => setLoginPassword(e)}
-          secureTextEntry
-          placeholder="Password"
+        <Stack.Screen
+          options={{animation: 'flip'}}
+          name="SignUp"
+          component={SignUp}
         />
-        <Text style={styles.textGray}>Forgot Password?</Text>
-        <LoginButton text="Sign In" />
-      </View>
-
-      {/* <View style={styles.viewBox}>
-        <Text style={styles.textGray}>Continue with</Text>
-        <View style={styles.socialBox}>
-          <Button style={styles.circleSocialButtons} title="Google" />
-          <Button style={styles.circleSocialButtons} title="Apple" />
-          <Button
-            style={styles.circleSocialButtons}
-            color={primary}
-            title="Facebook"
-          />
-        </View>
-      </View> */}
-
-      <Text style={styles.textGray}>
-        Don't have an account? <Text style={{color: primary}}>Signup</Text>
-      </Text>
-    </View>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
 // size:
 const width_proportion = '100%';
-const input_width_proportion = '80%';
 const height_proportion = '90%';
-const circle_proportion = '50%';
 
 // colors:
 const primary = '#FDB849';
@@ -89,63 +53,6 @@ const styles = StyleSheet.create({
     width: width_proportion,
     height: height_proportion,
     backgroundColor: 'white',
-  },
-  viewBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  title: {
-    fontFamily: 'EuclidCircularB-SemiBold',
-    fontWeight: '500',
-    fontSize: 40,
-    marginTop: 20,
-    color: dark,
-    width:260
-  },
-  loginInput: {
-    color: gray,
-    borderRadius: 7,
-    borderColor: third,
-    borderWidth: 1,
-    fontSize: 12,
-    backgroundColor: 'white',
-    width: 300,
-    height: 40,
-    marginBottom: 10,
-    fontFamily: 'EuclidCircularB-Light',
-    fontWeight: '500',
-  },
-  textGray: {
-    color: gray,
-    fontFamily: 'EuclidCircularB-Light',
-    fontWeight: '500',
-    fontSize: 12,
-    marginTop:30,
-    marginBottom: 10,
-  },
-  login: {
-    width: height_proportion,
-    height: 30,
-    fontFamily: 'EuclidCircularB-Light',
-    fontWeight: '500',
-    fontSize: 12,
-  },
-  socialBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  circleSocialButtons: {
-    height: 60,
-    width: 60,
-    borderRadius: circle_proportion,
-    borderColor: gray,
   },
 });
 
