@@ -5,7 +5,7 @@ import LoginButton from '../components/loginButton';
 const SignUp = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
+      <Text style={styles.title}>Sign Up</Text>
       <View style={styles.viewBox}>
         <TextInput
           style={styles.loginInput}
@@ -27,8 +27,8 @@ const SignUp = () => {
           placeholder="Password Again"
           required
         />
-        <LoginButton text="Sign Up" />
       </View>
+      <LoginButton text="Sign Up" />
     </View>
   );
 };
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     fontFamily: 'EuclidCircularB-SemiBold',
     fontWeight: '500',
     fontSize: 40,
-    marginTop: 20,
+    marginBottom: 50,
     color: dark,
     width: 300,
   },
@@ -79,14 +79,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: 'EuclidCircularB-Light',
     fontWeight: '500',
-  },
-  textGray: {
-    color: gray,
-    fontFamily: 'EuclidCircularB-Light',
-    fontWeight: '500',
-    fontSize: 12,
-    marginTop: 30,
-    marginBottom: 10,
   },
 });
 

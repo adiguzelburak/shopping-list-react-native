@@ -14,7 +14,7 @@ const Login = ({navigation}) => {
           style={styles.loginInput}
           value={loginMail}
           onChangeText={e => setLoginMail(e)}
-          keyboardType={'number-pad'}
+          keyboardType={'email-address'}
           placeholder="Email"
         />
         <TextInput
@@ -25,7 +25,10 @@ const Login = ({navigation}) => {
           placeholder="Password"
         />
         <Text style={styles.textGray}>Forgot Password?</Text>
-        <LoginButton text="Sign In" />
+        <LoginButton
+          text="Sign In"
+          onPress={() => navigation.navigate('Home')}
+        />
       </View>
 
       {/* <View style={styles.viewBox}>

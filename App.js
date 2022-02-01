@@ -10,6 +10,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 
@@ -20,14 +21,15 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          options={{animation: 'fade_from_bottom', headerShown: false}}
+          options={{headerShown: false}}
           name="Login"
           component={Login}
         />
+        <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
-          options={{animation: 'flip'}}
-          name="SignUp"
-          component={SignUp}
+          options={{headerShown: false}}
+          name="Home"
+          component={Home}
         />
       </Stack.Navigator>
     </NavigationContainer>
