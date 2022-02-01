@@ -1,7 +1,8 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import React, {useState} from 'react';
 import AddProductButton from '../components/addProductButton';
 export default function Home() {
+  //states
   const [list, setList] = useState([
     {
       product: 'Domates',
@@ -9,11 +10,15 @@ export default function Home() {
       isBought: false,
     },
   ]);
+
+  const addProduct = () => {
+    setList(x => [...x, {product: 'Patlican', price: '9.90$', isBought: true}]);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.navbar}>
         <Text style={styles.title}>Merhaba, Neo</Text>
-        <AddProductButton />
+        <AddProductButton onPress={addProduct} />
       </View>
       {list.map(children => (
         <View style={styles.viewBox}>
