@@ -35,20 +35,45 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Dialog.Container visible={visible}>
-        <Dialog.Title>Add Product</Dialog.Title>
+        <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
+          Add Product
+        </Dialog.Title>
         <Dialog.Input
           placeholder="Please enter a product."
+          style={{fontFamily: 'EuclidCircularB-Light'}}
           value={addNewProduct}
           onChangeText={e => setAddNewProduct(e)}
         />
         <Dialog.Input
           placeholder="Please enter a price."
+          style={{fontFamily: 'EuclidCircularB-Light'}}
           value={addNewPrice}
-          keyboardType='number-pad'
+          keyboardType="number-pad"
           onChangeText={e => setAddNewPrice(e)}
         />
-        <Dialog.Button label="Cancel" onPress={handleCancel} />
-        <Dialog.Button label="Add" onPress={handleAdd} />
+        <Dialog.Button
+          label="Cancel"
+          style={{
+            color: 'red',
+            fontFamily: 'EuclidCircularB-SemiBold',
+            borderWidth: 1,
+            borderRadius: 10,
+            borderColor: 'red',
+          }}
+          onPress={handleCancel}
+        />
+        <Dialog.Button
+          label="Add"
+          style={{
+            color: 'green',
+            fontFamily: 'EuclidCircularB-SemiBold',
+            borderWidth: 1,
+            borderRadius: 10,
+            borderColor: 'green',
+            marginLeft: 10,
+          }}
+          onPress={handleAdd}
+        />
       </Dialog.Container>
       <View style={styles.navbar}>
         <Text style={styles.title}>Merhaba, Neo</Text>
@@ -121,5 +146,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: dark,
     width: 260,
+  },
+  modalBox: {
+    borderRadius: 10,
   },
 });
