@@ -10,7 +10,7 @@ const SignUp = () => {
         <TextInput
           style={styles.loginInput}
           onChangeText={e => console.log(e)}
-          keyboardType={'number-pad'}
+          keyboardType={'email-address'}
           placeholder="Email"
         />
         <TextInput

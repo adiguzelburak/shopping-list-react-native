@@ -1,6 +1,7 @@
 import {View, Text, StyleSheet, Alert} from 'react-native';
 import React, {useState} from 'react';
 import AddProductButton from '../components/addProductButton';
+import Dialog from 'react-native-dialog';
 export default function Home() {
   //states
   const [list, setList] = useState([
@@ -10,12 +11,45 @@ export default function Home() {
       isBought: false,
     },
   ]);
+  const [visible, setVisible] = useState(false);
+  const [addNewProduct, setAddNewProduct] = useState('');
+  const [addNewPrice, setAddNewPrice] = useState('');
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const handleAdd = () => {
+    setList(x => [
+      ...x,
+      {product: addNewProduct, price: addNewPrice, isBought: false},
+    ]);
+    setAddNewProduct('');
+    setAddNewPrice('');
+    setVisible(false);
+  };
 
   const addProduct = () => {
-    setList(x => [...x, {product: 'Patlican', price: '9.90$', isBought: true}]);
+    setVisible(true);
   };
   return (
     <View style={styles.container}>
+      <Dialog.Container visible={visible}>
+        <Dialog.Title>Add Product</Dialog.Title>
+        <Dialog.Input
+          placeholder="Please enter a product."
+          value={addNewProduct}
+          onChangeText={e => setAddNewProduct(e)}
+        />
+        <Dialog.Input
+          placeholder="Please enter a price."
+          value={addNewPrice}
+          keyboardType='number-pad'
+          onChangeText={e => setAddNewPrice(e)}
+        />
+        <Dialog.Button label="Cancel" onPress={handleCancel} />
+        <Dialog.Button label="Add" onPress={handleAdd} />
+      </Dialog.Container>
       <View style={styles.navbar}>
         <Text style={styles.title}>Merhaba, Neo</Text>
         <AddProductButton onPress={addProduct} />
