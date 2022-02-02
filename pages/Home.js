@@ -6,6 +6,7 @@ export default function Home() {
   //states
   const [list, setList] = useState([
     {
+      id: 1,
       product: 'Domates',
       price: '20$',
       isBought: false,
@@ -15,6 +16,10 @@ export default function Home() {
   const [addNewProduct, setAddNewProduct] = useState('');
   const [addNewPrice, setAddNewPrice] = useState('');
 
+  const deleteProduct = product => {
+    setList(list.filter(x => x.id !== product));
+  };
+
   const handleCancel = () => {
     setVisible(false);
   };
@@ -22,7 +27,12 @@ export default function Home() {
   const handleAdd = () => {
     setList(x => [
       ...x,
-      {product: addNewProduct, price: addNewPrice, isBought: false},
+      {
+        id: list.length + 1,
+        product: addNewProduct,
+        price: addNewPrice,
+        isBought: false,
+      },
     ]);
     setAddNewProduct('');
     setAddNewPrice('');
@@ -81,8 +91,10 @@ export default function Home() {
       </View>
       {list.map(children => (
         <View style={styles.viewBox}>
+          <Text style={styles.product}>{children.id}</Text>
           <Text style={styles.product}>{children.product}</Text>
           <Text style={styles.price}>{children.price}</Text>
+          <Text onPress={() => deleteProduct(children.id)}>Delete</Text>
         </View>
       ))}
     </View>
