@@ -1,7 +1,8 @@
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, Text, StyleSheet, Alert, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import AddProductButton from '../components/addProductButton';
 import Dialog from 'react-native-dialog';
+import DeleteProductButton from '../components/deleteProductButton';
 export default function Home() {
   //states
   const [list, setList] = useState([
@@ -89,14 +90,19 @@ export default function Home() {
         <Text style={styles.title}>Merhaba, Neo</Text>
         <AddProductButton onPress={addProduct} />
       </View>
-      {list.map(children => (
-        <View style={styles.viewBox}>
-          <Text style={styles.product}>{children.id}</Text>
-          <Text style={styles.product}>{children.product}</Text>
-          <Text style={styles.price}>{children.price}</Text>
-          <Text onPress={() => deleteProduct(children.id)}>Delete</Text>
-        </View>
-      ))}
+      <ScrollView>
+        {list.map(children => (
+          <View style={styles.viewBox}>
+            <Text style={styles.product}>{children.id}</Text>
+            <Text style={styles.product}>{children.product}</Text>
+            <Text style={styles.price}>{children.price}</Text>
+            <DeleteProductButton
+              onPress={() => deleteProduct(children.id)}
+              title="Delete"
+            />
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -115,16 +121,21 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     alignItems: 'center',
-    width: width_proportion,
     height: height_proportion,
     backgroundColor: 'white',
+  },
+  scrollView: {
+    height: height_proportion,
+    width: width_proportion,
   },
   navbar: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     flexDirection: 'row',
-    width: '80%',
+    borderBottomWidth: 1,
+    borderColor: primary,
+    marginBottom: 5,
   },
   viewBox: {
     display: 'flex',
@@ -132,12 +143,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 20,
-    marginBottom: 20,
     borderRadius: 10,
     borderColor: gray,
     borderWidth: 1,
-    width: '80%',
-    height: '15%',
+    width: 330,
+    height: 50,
   },
   product: {
     fontFamily: 'EuclidCircularB-SemiBold',
