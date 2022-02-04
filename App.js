@@ -36,26 +36,4 @@ const App = () => {
   );
 };
 
-// size:
-const width_proportion = '100%';
-const height_proportion = '90%';
-
-// colors:
-const primary = '#FDB849';
-const secondary = '#14213D';
-const dark = '#000000';
-const gray = 'gray';
-const third = '#e5e5e5';
-
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: width_proportion,
-    height: height_proportion,
-    backgroundColor: 'white',
-  },
-});
-
 export default App;

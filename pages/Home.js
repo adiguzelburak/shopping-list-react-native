@@ -3,17 +3,11 @@ import React, {useEffect, useState} from 'react';
 import AddProductButton from '../components/addProductButton';
 import Dialog from 'react-native-dialog';
 import DeleteProductButton from '../components/deleteProductButton';
+import AnimatedLottieView from 'lottie-react-native';
 
 export default function Home() {
   //states
-  const [list, setList] = useState([
-    {
-      id: 0,
-      product: '',
-      price: '',
-      isBought: false,
-    },
-  ]);
+  const [list, setList] = useState([{}]);
   const [visible, setVisible] = useState(false);
   const [addNewProduct, setAddNewProduct] = useState('');
   const [addNewPrice, setAddNewPrice] = useState('');
@@ -21,6 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     _retrieveData();
+    console.log(list.length);
   }, []);
   useEffect(() => {
     _storeData();
@@ -36,6 +31,10 @@ export default function Home() {
   };
 
   const handleAdd = () => {
+    if ((addNewPrice == '') & (addNewProduct == '')) {
+      alert('Please enter all inputs.','title');
+      return;
+    }
     setList(x => [
       ...x,
       {
@@ -83,58 +82,74 @@ export default function Home() {
         <Dialog.Input
           placeholder="Please enter a product."
           style={{fontFamily: 'EuclidCircularB-Light'}}
+          underlineColorAndroid={primary}
           value={addNewProduct}
           onChangeText={e => setAddNewProduct(e)}
         />
         <Dialog.Input
           placeholder="Please enter a price."
-          style={{fontFamily: 'EuclidCircularB-Light'}}
+          style={{
+            fontFamily: 'EuclidCircularB-Light',
+          }}
+          underlineColorAndroid={primary}
           value={addNewPrice}
           keyboardType="number-pad"
           onChangeText={e => setAddNewPrice(e)}
         />
         <Dialog.Button
-          label="Cancel"
-          style={{
-            color: 'red',
-            fontFamily: 'EuclidCircularB-SemiBold',
-            borderWidth: 1,
-            borderRadius: 10,
-            borderColor: 'red',
-          }}
-          onPress={handleCancel}
-        />
-        <Dialog.Button
           label="Add"
           style={{
-            color: 'green',
+            color: 'white',
             fontFamily: 'EuclidCircularB-SemiBold',
-            borderWidth: 1,
             borderRadius: 10,
-            borderColor: 'green',
-            marginLeft: 10,
+            backgroundColor: 'green',
+            marginRight: 10,
           }}
           onPress={handleAdd}
+        />
+        <Dialog.Button
+          label="Cancel"
+          style={{
+            color: 'white',
+            fontFamily: 'EuclidCircularB-SemiBold',
+            borderRadius: 10,
+            backgroundColor: 'red',
+          }}
+          onPress={handleCancel}
         />
       </Dialog.Container>
 
       <View style={styles.navbar}>
-        <Text style={styles.title}>Merhaba, Neo</Text>
-        <AddProductButton onPress={addProduct} />
+        <View>
+          <Text style={styles.title}>Hello,</Text>
+          <Text style={styles.title}>Neo</Text>
+        </View>
+        <AddProductButton onPress={addProduct} text="➕" />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {list.map(children => (
-          <View style={styles.viewBox}>
-            <Text style={styles.product}>{children.id}</Text>
-            <Text style={styles.product}>{children.product}</Text>
-            <Text style={styles.price}>{children.price}$</Text>
-            <DeleteProductButton
-              onPress={() => deleteProduct(children.id)}
-              title="Delete"
-            />
-          </View>
-        ))}
-      </ScrollView>
+      {list.length !== 0 ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {list.map(children => (
+            <View style={styles.viewBox}>
+              <Text style={styles.product}>{children.id}</Text>
+              <Text style={styles.product}>{children.product}</Text>
+              <Text style={styles.price}>{children.price}$</Text>
+              <DeleteProductButton
+                onPress={() => deleteProduct(children.id)}
+                title="Delete"
+              />
+            </View>
+          ))}
+        </ScrollView>
+      ) : (
+        <View style={styles.emptyProduct}>
+          <AnimatedLottieView
+            style={styles.emptyProduct}
+            source={require('../assets/animation/empty.json')}
+            autoPlay
+            loop
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -168,6 +183,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: primary,
     marginBottom: 5,
+    marginTop: 20,
   },
   viewBox: {
     display: 'flex',
@@ -196,12 +212,15 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'EuclidCircularB-SemiBold',
     fontWeight: '500',
-    fontSize: 40,
-    marginTop: 20,
+    fontSize: 48,
     color: dark,
     width: 260,
   },
   modalBox: {
     borderRadius: 10,
+  },
+  emptyProduct: {
+    marginTop: 40,
+    width: 300,
   },
 });

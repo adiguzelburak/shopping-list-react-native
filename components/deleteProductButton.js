@@ -5,7 +5,7 @@ export default function DeleteProductButton({text, onPress}) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.button}>
-        <Text style={styles.text}>{text}</Text>
+        <Text style={styles.text}>✖</Text>
       </View>
     </TouchableOpacity>
   );
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontFamily: 'EuclidCircularB-Light',
     fontWeight: '500',
-    fontSize: 12,
+    fontSize: 14,
+    marginBottom:2,
   },
 });

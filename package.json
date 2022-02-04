@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-navigation/native": "^6.0.7",
     "@react-navigation/native-stack": "^6.2.5",
+    "lottie-ios": "3.2.3",
+    "lottie-react-native": "^5.0.1",
     "react": "17.0.2",
     "react-native": "0.67.1",
     "react-native-dialog": "^9.2.0",

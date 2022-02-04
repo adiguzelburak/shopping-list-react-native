@@ -1,11 +1,11 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-export default function AddProductButton({onPress}) {
+export default function AddProductButton({text, onPress}) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.button}>
-        <Text style={styles.text}></Text>
+        <Text style={styles.text}>{text}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -16,14 +16,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 40,
-    height: 40,
+    width: 60,
+    height: 60,
     borderRadius: 50,
     backgroundColor: '#FDB849',
   },
   text: {
     color: '#ffffff',
     fontFamily: 'EuclidCircularB-Light',
-    fontSize: 40,
+    fontSize: 20,
   },
 });
