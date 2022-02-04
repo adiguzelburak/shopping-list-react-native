@@ -1,22 +1,32 @@
-import {View, Text, StyleSheet, Alert, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import {View, Text, StyleSheet, ScrollView, AsyncStorage} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import AddProductButton from '../components/addProductButton';
 import Dialog from 'react-native-dialog';
 import DeleteProductButton from '../components/deleteProductButton';
+
 export default function Home() {
   //states
   const [list, setList] = useState([
     {
-      id: 1,
-      product: 'Domates',
-      price: '20$',
+      id: 0,
+      product: '',
+      price: '',
       isBought: false,
     },
   ]);
   const [visible, setVisible] = useState(false);
   const [addNewProduct, setAddNewProduct] = useState('');
   const [addNewPrice, setAddNewPrice] = useState('');
+  const [isSelected, setSelection] = useState(false);
 
+  useEffect(() => {
+    _retrieveData();
+  }, []);
+  useEffect(() => {
+    _storeData();
+  }, [list]);
+
+  //functions add - delete product list
   const deleteProduct = product => {
     setList(list.filter(x => x.id !== product));
   };
@@ -43,6 +53,27 @@ export default function Home() {
   const addProduct = () => {
     setVisible(true);
   };
+
+  // AsyncStorage
+  const _storeData = async () => {
+    try {
+      await AsyncStorage.setItem('data', JSON.stringify(list));
+    } catch (error) {
+      alert('Error - Please Try Again.');
+    }
+  };
+  const _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        setList(data);
+      }
+    } catch (error) {
+      alert('Error - Please Check Network');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Dialog.Container visible={visible}>
@@ -86,16 +117,17 @@ export default function Home() {
           onPress={handleAdd}
         />
       </Dialog.Container>
+
       <View style={styles.navbar}>
         <Text style={styles.title}>Merhaba, Neo</Text>
         <AddProductButton onPress={addProduct} />
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {list.map(children => (
           <View style={styles.viewBox}>
             <Text style={styles.product}>{children.id}</Text>
             <Text style={styles.product}>{children.product}</Text>
-            <Text style={styles.price}>{children.price}</Text>
+            <Text style={styles.price}>{children.price}$</Text>
             <DeleteProductButton
               onPress={() => deleteProduct(children.id)}
               title="Delete"
