@@ -58,7 +58,7 @@ const Login = ({navigation}) => {
 
 // size:
 const width_proportion = '100%';
-const height_proportion = '90%';
+const height_proportion = '100%';
 // colors:
 const primary = '#FDB849';
 const secondary = '#14213D';
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     width: width_proportion,
     height: height_proportion,
     backgroundColor: 'white',
+    
   },
   viewBox: {
     display: 'flex',

@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, ScrollView, AsyncStorage} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  AsyncStorage,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AddProductButton from '../components/addProductButton';
 import Dialog from 'react-native-dialog';
@@ -15,7 +22,6 @@ export default function Home() {
 
   useEffect(() => {
     _retrieveData();
-    console.log(list.length);
   }, []);
   useEffect(() => {
     _storeData();
@@ -32,7 +38,7 @@ export default function Home() {
 
   const handleAdd = () => {
     if ((addNewPrice == '') & (addNewProduct == '')) {
-      alert('Please enter all inputs.','title');
+      alert('Please enter all inputs.', 'title');
       return;
     }
     setList(x => [
@@ -51,6 +57,11 @@ export default function Home() {
 
   const addProduct = () => {
     setVisible(true);
+  };
+
+  const isBoughtCheck = () => {
+    setList(prevData => [{...prevData, isBought: true}]);
+    console.log(list);
   };
 
   // AsyncStorage
@@ -130,7 +141,9 @@ export default function Home() {
         <ScrollView showsVerticalScrollIndicator={false}>
           {list.map(children => (
             <View style={styles.viewBox}>
-              <Text style={styles.product}>{children.id}</Text>
+              {/* <TouchableOpacity onPress={isBoughtCheck}>
+                <View style={styles.isBoughtButton} />
+              </TouchableOpacity> */}
               <Text style={styles.product}>{children.product}</Text>
               <Text style={styles.price}>{children.price}$</Text>
               <DeleteProductButton
@@ -156,7 +169,7 @@ export default function Home() {
 
 // size:
 const width_proportion = '100%';
-const height_proportion = '90%';
+const height_proportion = '100%';
 // colors:
 const primary = '#FDB849';
 const secondary = '#14213D';
@@ -195,7 +208,7 @@ const styles = StyleSheet.create({
     borderColor: gray,
     borderWidth: 1,
     width: 330,
-    height: 50,
+    height: 80,
   },
   product: {
     fontFamily: 'EuclidCircularB-SemiBold',
@@ -222,5 +235,14 @@ const styles = StyleSheet.create({
   emptyProduct: {
     marginTop: 40,
     width: 300,
+  },
+  isBoughtButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 25,
+    height: 25,
+    borderRadius: 50,
+    backgroundColor: secondary,
   },
 });

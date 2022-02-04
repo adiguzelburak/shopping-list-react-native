@@ -35,7 +35,7 @@ const SignUp = () => {
 
 // size:
 const width_proportion = '100%';
-const height_proportion = '90%';
+const height_proportion = '100%';
 // colors:
 const primary = '#FDB849';
 const secondary = '#14213D';
@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
     fontFamily: 'EuclidCircularB-SemiBold',
     fontWeight: '500',
     fontSize: 40,
-    marginBottom: 50,
+    marginBottom: 10,
     color: dark,
-    width: 300,
+    width: 'auto',
   },
   loginInput: {
     color: gray,
