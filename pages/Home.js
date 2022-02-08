@@ -37,7 +37,7 @@ export default function Home() {
   };
 
   const handleAdd = () => {
-    if ((addNewPrice == '') & (addNewProduct == '')) {
+    if (addNewPrice == '' || addNewProduct == '') {
       alert('Please enter all inputs.', 'title');
       return;
     }
@@ -59,9 +59,12 @@ export default function Home() {
     setVisible(true);
   };
 
-  const isBoughtCheck = () => {
-    setList(prevData => [{...prevData, isBought: true}]);
-    console.log(list);
+  const isBoughtCheck = id => {
+    if (list[id - 1].isBought == false) {
+      list[id - 1].isBought = true;
+    } else {
+      list[id - 1].isBought = false;
+    }
   };
 
   // AsyncStorage
@@ -141,9 +144,9 @@ export default function Home() {
         <ScrollView showsVerticalScrollIndicator={false}>
           {list.map(children => (
             <View style={styles.viewBox}>
-              {/* <TouchableOpacity onPress={isBoughtCheck}>
+              <TouchableOpacity onPress={() => isBoughtCheck(children.id)}>
                 <View style={styles.isBoughtButton} />
-              </TouchableOpacity> */}
+              </TouchableOpacity>
               <Text style={styles.product}>{children.product}</Text>
               <Text style={styles.price}>{children.price}$</Text>
               <DeleteProductButton
