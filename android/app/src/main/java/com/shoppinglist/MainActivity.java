@@ -1,4 +1,4 @@
-package com.shoppinglist;
+package com.cycloner.shoppingapp;
 
 import com.facebook.react.ReactActivity;
 import android.os.Bundle;

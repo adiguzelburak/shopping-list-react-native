@@ -11,15 +11,17 @@ import AddProductButton from '../components/addProductButton';
 import Dialog from 'react-native-dialog';
 import DeleteProductButton from '../components/deleteProductButton';
 import AnimatedLottieView from 'lottie-react-native';
+import EditProductButton from '../components/editProductButton';
+import auth from '@react-native-firebase/auth';
 
-export default function Home() {
+export default function Home({navigation}) {
   //states
   const [list, setList] = useState([{}]);
   const [visible, setVisible] = useState(false);
   const [addNewProduct, setAddNewProduct] = useState('');
   const [addNewPrice, setAddNewPrice] = useState('');
-  const [isSelected, setSelection] = useState(false);
-
+  const [editId, setEditId] = useState();
+  // use effects
   useEffect(() => {
     _retrieveData();
   }, []);
@@ -55,7 +57,13 @@ export default function Home() {
     setVisible(false);
   };
 
+  const handleEdit = () => {
+    deleteProduct(x.id);
+  };
+
   const addProduct = () => {
+    setAddNewProduct('');
+    setAddNewPrice('');
     setVisible(true);
   };
 
@@ -65,6 +73,13 @@ export default function Home() {
     } else {
       list[id - 1].isBought = false;
     }
+  };
+
+  const editProductButton = e => {
+    setVisible(true);
+    setAddNewProduct(e.product);
+    setAddNewPrice(e.price);
+    deleteProduct(e.id);
   };
 
   // AsyncStorage
@@ -85,6 +100,17 @@ export default function Home() {
     } catch (error) {
       alert('Error - Please Check Network');
     }
+  };
+
+  // sign out firebase
+
+  const signOut = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        console.log('User Signed Out');
+        navigation.navigate('Login');
+      });
   };
 
   return (
@@ -139,6 +165,8 @@ export default function Home() {
           <Text style={styles.title}>Neo</Text>
         </View>
         <AddProductButton onPress={addProduct} text="➕" />
+        <AddProductButton onPress={signOut} text="Out" />
+        {/* <AddProductButton onPress={isBoughtCheck} text="ad" /> */}
       </View>
       {list.length !== 0 ? (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -153,6 +181,7 @@ export default function Home() {
                 onPress={() => deleteProduct(children.id)}
                 title="Delete"
               />
+              <EditProductButton onPress={() => editProductButton(children)} />
             </View>
           ))}
         </ScrollView>

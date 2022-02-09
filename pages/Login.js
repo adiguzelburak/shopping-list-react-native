@@ -1,59 +1,83 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import LoginButton from '../components/loginButton';
+import auth from '@react-native-firebase/auth';
+import Home from './Home';
 
 const Login = ({navigation}) => {
   const [loginMail, setLoginMail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome The Shopping List</Text>
-      <View style={styles.viewBox}>
-        <TextInput
-          style={styles.loginInput}
-          value={loginMail}
-          onChangeText={e => setLoginMail(e)}
-          keyboardType={'email-address'}
-          placeholder="Email"
-        />
-        <TextInput
-          style={styles.loginInput}
-          value={loginPassword}
-          onChangeText={e => setLoginPassword(e)}
-          secureTextEntry
-          placeholder="Password"
-        />
-        <Text style={styles.textGray}>Forgot Password?</Text>
-        <LoginButton
-          text="Sign In"
-          onPress={() => navigation.navigate('Home')}
-        />
-      </View>
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
 
-      {/* <View style={styles.viewBox}>
-        <Text style={styles.textGray}>Continue with</Text>
-        <View style={styles.socialBox}>
-          <Button style={styles.circleSocialButtons} title="Google" />
-          <Button style={styles.circleSocialButtons} title="Apple" />
-          <Button
-            style={styles.circleSocialButtons}
-            color={primary}
-            title="Facebook"
+  const onAuthStateChanged = user => {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  };
+
+  const loginApp = () => {
+    if (loginMail == '' || loginPassword == '') {
+      alert('Email or Password can not be empty');
+      return;
+    }
+    auth()
+      .signInWithEmailAndPassword(loginMail, loginPassword)
+      .then(() => {
+        console.log('Login in Success!');
+        //navigation.navigate('Home');
+      })
+      .catch(err => {
+        if (err.code === 'auth/user-not-found') {
+          alert('Does not exist user!');
+        } else if (err.code === 'auth/invalid-email') {
+          alert('Please enter correct email format!');
+        }
+      });
+  };
+
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome The Shopping List</Text>
+        <View style={styles.viewBox}>
+          <TextInput
+            style={styles.loginInput}
+            value={loginMail}
+            onChangeText={e => setLoginMail(e)}
+            keyboardType={'email-address'}
+            placeholder="Email"
           />
+          <TextInput
+            style={styles.loginInput}
+            value={loginPassword}
+            onChangeText={e => setLoginPassword(e)}
+            secureTextEntry
+            placeholder="Password"
+          />
+          <Text style={styles.textGray}>Forgot Password?</Text>
+          <LoginButton text="Sign In" onPress={loginApp} />
         </View>
-      </View> */}
 
-      <Text style={styles.textGray}>
-        Don't have an account?{' '}
-        <Text
-          style={{color: primary}}
-          onPress={() => navigation.navigate('SignUp')}>
-          Signup
+        <Text style={styles.textGray}>
+          Don't have an account?{' '}
+          <Text
+            style={{color: primary}}
+            onPress={() => navigation.navigate('SignUp')}>
+            Signup
+          </Text>
         </Text>
-      </Text>
-    </View>
-  );
+      </View>
+    );
+  }
+
+  return <Home />;
 };
 
 // size:
@@ -74,7 +98,6 @@ const styles = StyleSheet.create({
     width: width_proportion,
     height: height_proportion,
     backgroundColor: 'white',
-    
   },
   viewBox: {
     display: 'flex',
@@ -118,14 +141,6 @@ const styles = StyleSheet.create({
     fontFamily: 'EuclidCircularB-Light',
     fontWeight: '500',
     fontSize: 12,
-  },
-  socialBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 20,
   },
 });
 

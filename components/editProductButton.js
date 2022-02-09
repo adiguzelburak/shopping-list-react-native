@@ -1,32 +1,34 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-export default function DeleteProductButton({text, onPress}) {
+export default function EditProductButton({onPress}) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.button}>
-        <Text style={styles.text}>✖</Text>
+        <Text style={styles.text}>Edit</Text>
       </View>
     </TouchableOpacity>
   );
 }
+
+// colors:
+const primary = '#FDB849';
 
 const styles = StyleSheet.create({
   button: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    
-    width: 30,
-    height: 30,
+    width: 50,
+    height: 50,
     borderRadius: 50,
-    backgroundColor: '#ef233c',
+    backgroundColor: primary,
   },
   text: {
     color: '#ffffff',
     fontFamily: 'EuclidCircularB-Light',
     fontWeight: '500',
     fontSize: 14,
-    marginBottom:2,
+    marginBottom: 2,
   },
 });
