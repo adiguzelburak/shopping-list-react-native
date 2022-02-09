@@ -1,34 +1,56 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import LoginButton from '../components/loginButton';
+import auth from '@react-native-firebase/auth';
 
-const SignUp = () => {
+const SignUp = ({navigation}) => {
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const registerUser = () => {
+    auth()
+      .createUserWithEmailAndPassword(newUserEmail, newUserPassword)
+      .then(() => {
+        alert('User account created Successfully!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          alert('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          alert('That email address is invalid!');
+        }
+        console.error(error);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
       <View style={styles.viewBox}>
         <TextInput
           style={styles.loginInput}
-          onChangeText={e => console.log(e)}
+          value={newUserEmail}
+          onChangeText={e => setNewUserEmail(e)}
           keyboardType={'email-address'}
           placeholder="Email"
         />
         <TextInput
           style={styles.loginInput}
-          onChangeText={e => console.log(e)}
+          value={newUserPassword}
+          onChangeText={e => setNewUserPassword(e)}
           secureTextEntry
           placeholder="Password"
-          required
         />
-        <TextInput
+        {/* <TextInput
           style={styles.loginInput}
           onChangeText={e => console.log(e)}
           secureTextEntry
           placeholder="Password Again"
           required
-        />
+        /> */}
       </View>
-      <LoginButton text="Sign Up" />
+      <LoginButton text="Sign Up" onPress={registerUser} />
     </View>
   );
 };
