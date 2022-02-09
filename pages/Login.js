@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import LoginButton from '../components/loginButton';
 import auth from '@react-native-firebase/auth';
 import Home from './Home';
@@ -40,6 +46,26 @@ const Login = ({navigation}) => {
       });
   };
 
+  const forgotPassword = () => {
+    if (loginMail == '') {
+      alert('Please enter an email.');
+    } else {
+      alert(
+        'Reset password link sended successfully. Please check your email.',
+      );
+      let regEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+
+      if (!regEmail.test(loginMail)) {
+        alert('Invalid Email');
+      } else {
+        auth()
+          .sendPasswordResetEmail(loginMail)
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      }
+    }
+  };
+
   if (initializing) return null;
 
   if (!user) {
@@ -61,7 +87,11 @@ const Login = ({navigation}) => {
             secureTextEntry
             placeholder="Password"
           />
-          <Text style={styles.textGray}>Forgot Password?</Text>
+          <TouchableOpacity onPress={forgotPassword}>
+            <View>
+              <Text style={styles.forgotPassword}>Forgot Password?</Text>
+            </View>
+          </TouchableOpacity>
           <LoginButton text="Sign In" onPress={loginApp} />
         </View>
 
@@ -76,7 +106,6 @@ const Login = ({navigation}) => {
       </View>
     );
   }
-
   return <Home />;
 };
 
@@ -134,6 +163,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 30,
     marginBottom: 10,
+  },
+  forgotPassword: {
+    color: gray,
+    fontFamily: 'EuclidCircularB-Light',
+    fontWeight: '500',
+    fontSize: 14,
+    marginTop: 20,
+    marginBottom: 30,
+    textDecorationLine: 'underline',
   },
   login: {
     width: height_proportion,
