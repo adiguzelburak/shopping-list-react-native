@@ -5,6 +5,7 @@ import {
   ScrollView,
   AsyncStorage,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AddProductButton from '../components/addProductButton';
@@ -13,93 +14,57 @@ import DeleteProductButton from '../components/deleteProductButton';
 import AnimatedLottieView from 'lottie-react-native';
 import EditProductButton from '../components/editProductButton';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export default function Home({navigation}) {
   //states
-  const [list, setList] = useState([{}]);
   const [visible, setVisible] = useState(false);
   const [addNewProduct, setAddNewProduct] = useState('');
   const [addNewPrice, setAddNewPrice] = useState('');
-  const [editId, setEditId] = useState();
+  const [productList, setProductList] = useState([]);
+
+  // Firestore Datas.
+  const firestoreData = firestore().collection('userId');
+
   // use effects
   useEffect(() => {
-    _retrieveData();
+    return firestoreData.onSnapshot(datas => {
+      const list = [];
+      datas.forEach(data => {
+        list.push({
+          product: data.data().product,
+          price: data.data().price,
+          isBought: data.data().isBought,
+        });
+      });
+      setProductList(list);
+      console.log(list);
+    });
   }, []);
-  useEffect(() => {
-    _storeData();
-  }, [list]);
-
-  //functions add - delete product list
-  const deleteProduct = product => {
-    setList(list.filter(x => x.id !== product));
-  };
 
   const handleCancel = () => {
     setVisible(false);
   };
 
-  const handleAdd = () => {
+  const firebaseAdd = async () => {
     if (addNewPrice == '' || addNewProduct == '') {
       alert('Please enter all inputs.', 'title');
       return;
     }
-    setList(x => [
-      ...x,
-      {
-        id: list.length + 1,
-        product: addNewProduct,
-        price: addNewPrice,
-        isBought: false,
-      },
-    ]);
+    await firestoreData.add({
+      product: addNewProduct,
+      price: addNewPrice,
+      isBought: false,
+    });
     setAddNewProduct('');
     setAddNewPrice('');
     setVisible(false);
-  };
-
-  const handleEdit = () => {
-    deleteProduct(x.id);
   };
 
   const addProduct = () => {
     setAddNewProduct('');
     setAddNewPrice('');
     setVisible(true);
-  };
-
-  const isBoughtCheck = id => {
-    if (list[id - 1].isBought == false) {
-      list[id - 1].isBought = true;
-    } else {
-      list[id - 1].isBought = false;
-    }
-  };
-
-  const editProductButton = e => {
-    setVisible(true);
-    setAddNewProduct(e.product);
-    setAddNewPrice(e.price);
-    deleteProduct(e.id);
-  };
-
-  // AsyncStorage
-  const _storeData = async () => {
-    try {
-      await AsyncStorage.setItem('data', JSON.stringify(list));
-    } catch (error) {
-      alert('Error - Please Try Again.');
-    }
-  };
-  const _retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('data');
-      if (value !== null) {
-        const data = JSON.parse(value);
-        setList(data);
-      }
-    } catch (error) {
-      alert('Error - Please Check Network');
-    }
   };
 
   // sign out firebase
@@ -145,7 +110,7 @@ export default function Home({navigation}) {
             backgroundColor: 'green',
             marginRight: 10,
           }}
-          onPress={handleAdd}
+          onPress={firebaseAdd}
         />
         <Dialog.Button
           label="Cancel"
@@ -168,23 +133,21 @@ export default function Home({navigation}) {
         <AddProductButton onPress={signOut} text="Out" />
         {/* <AddProductButton onPress={isBoughtCheck} text="ad" /> */}
       </View>
-      {list.length !== 0 ? (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {list.map(children => (
+      {productList.length !== 0 ? (
+        <FlatList
+          data={productList}
+          renderItem={({item}) => (
             <View style={styles.viewBox}>
-              <TouchableOpacity onPress={() => isBoughtCheck(children.id)}>
+              <TouchableOpacity>
                 <View style={styles.isBoughtButton} />
               </TouchableOpacity>
-              <Text style={styles.product}>{children.product}</Text>
-              <Text style={styles.price}>{children.price}$</Text>
-              <DeleteProductButton
-                onPress={() => deleteProduct(children.id)}
-                title="Delete"
-              />
-              <EditProductButton onPress={() => editProductButton(children)} />
+              <Text style={styles.product}>{item.product}</Text>
+              <Text style={styles.price}>{item.price}$</Text>
+              <DeleteProductButton title="Delete" />
+              <EditProductButton />
             </View>
-          ))}
-        </ScrollView>
+          )}
+        />
       ) : (
         <View style={styles.emptyProduct}>
           <AnimatedLottieView

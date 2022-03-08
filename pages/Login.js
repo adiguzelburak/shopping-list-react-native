@@ -35,7 +35,7 @@ const Login = ({navigation}) => {
       .signInWithEmailAndPassword(loginMail, loginPassword)
       .then(() => {
         console.log('Login in Success!');
-        //navigation.navigate('Home');
+        navigation.navigate('Home');
       })
       .catch(err => {
         if (err.code === 'auth/user-not-found') {
