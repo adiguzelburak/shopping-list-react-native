@@ -19,9 +19,11 @@ import firestore from '@react-native-firebase/firestore';
 export default function Home({navigation}) {
   //states
   const [visible, setVisible] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
   const [addNewProduct, setAddNewProduct] = useState('');
   const [addNewPrice, setAddNewPrice] = useState('');
   const [productList, setProductList] = useState([]);
+  const [docId, setDocId] = useState('');
 
   // Firestore Datas.
   const firestoreData = firestore().collection('userId');
@@ -32,18 +34,20 @@ export default function Home({navigation}) {
       const list = [];
       datas.forEach(data => {
         list.push({
+          id: data.id,
           product: data.data().product,
           price: data.data().price,
           isBought: data.data().isBought,
         });
       });
       setProductList(list);
-      console.log(list);
     });
   }, []);
 
   const handleCancel = () => {
     setVisible(false);
+    setEditVisible(false);
+    setDocId('');
   };
 
   const firebaseAdd = async () => {
@@ -61,7 +65,37 @@ export default function Home({navigation}) {
     setVisible(false);
   };
 
-  const addProduct = () => {
+  const firebaseDelete = documentId => {
+    firestore()
+      .collection('userId')
+      .doc(documentId)
+      .delete()
+      .then(() => console.log('deleted successfully'));
+  };
+
+  const firebaseEditProduct = () => {
+    firestore()
+      .collection('userId')
+      .doc(`${docId}`)
+      .set({
+        product: addNewProduct,
+        price: addNewPrice,
+      })
+      .then(() => {
+        console.log('Product updated!');
+      });
+    setEditVisible(false);
+    setDocId('');
+  };
+
+  const editProductModal = item => {
+    setAddNewProduct(item.product);
+    setAddNewPrice(item.price);
+    setDocId(item.id);
+    setEditVisible(true);
+  };
+
+  const addProductModal = () => {
     setAddNewProduct('');
     setAddNewPrice('');
     setVisible(true);
@@ -80,6 +114,7 @@ export default function Home({navigation}) {
 
   return (
     <View style={styles.container}>
+
       <Dialog.Container visible={visible}>
         <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
           Add Product
@@ -124,15 +159,59 @@ export default function Home({navigation}) {
         />
       </Dialog.Container>
 
+      <Dialog.Container visible={editVisible}>
+        <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
+          Add Product
+        </Dialog.Title>
+        <Dialog.Input
+          placeholder="Please enter a product."
+          style={{fontFamily: 'EuclidCircularB-Light'}}
+          underlineColorAndroid={primary}
+          value={addNewProduct}
+          onChangeText={e => setAddNewProduct(e)}
+        />
+        <Dialog.Input
+          placeholder="Please enter a price."
+          style={{
+            fontFamily: 'EuclidCircularB-Light',
+          }}
+          underlineColorAndroid={primary}
+          value={addNewPrice}
+          keyboardType="number-pad"
+          onChangeText={e => setAddNewPrice(e)}
+        />
+        <Dialog.Button
+          label="Edit"
+          style={{
+            color: 'white',
+            fontFamily: 'EuclidCircularB-SemiBold',
+            borderRadius: 10,
+            backgroundColor: primary,
+            marginRight: 10,
+          }}
+          onPress={firebaseEditProduct}
+        />
+        <Dialog.Button
+          label="Cancel"
+          style={{
+            color: 'white',
+            fontFamily: 'EuclidCircularB-SemiBold',
+            borderRadius: 10,
+            backgroundColor: 'red',
+          }}
+          onPress={handleCancel}
+        />
+      </Dialog.Container>
+
       <View style={styles.navbar}>
         <View>
           <Text style={styles.title}>Hello,</Text>
           <Text style={styles.title}>Neo</Text>
         </View>
-        <AddProductButton onPress={addProduct} text="➕" />
         <AddProductButton onPress={signOut} text="Out" />
         {/* <AddProductButton onPress={isBoughtCheck} text="ad" /> */}
       </View>
+
       {productList.length !== 0 ? (
         <FlatList
           data={productList}
@@ -143,8 +222,11 @@ export default function Home({navigation}) {
               </TouchableOpacity>
               <Text style={styles.product}>{item.product}</Text>
               <Text style={styles.price}>{item.price}$</Text>
-              <DeleteProductButton title="Delete" />
-              <EditProductButton />
+              <DeleteProductButton
+                title="Delete"
+                onPress={() => firebaseDelete(item.id)}
+              />
+              <EditProductButton onPress={() => editProductModal(item)} />
             </View>
           )}
         />
@@ -158,6 +240,7 @@ export default function Home({navigation}) {
           />
         </View>
       )}
+      <AddProductButton text="➕" onPress={addProductModal} />
     </View>
   );
 }
@@ -182,6 +265,12 @@ const styles = StyleSheet.create({
   scrollView: {
     height: height_proportion,
     width: width_proportion,
+  },
+  addItem: {
+    position: 'absolute',
+    right: 25,
+    bottom: 90,
+    backgroundColor: 'red',
   },
   navbar: {
     display: 'flex',
