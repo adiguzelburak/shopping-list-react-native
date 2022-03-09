@@ -16,7 +16,7 @@ import EditProductButton from '../components/editProductButton';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-export default function Home({navigation}) {
+export default function Home({route, navigation}) {
   //states
   const [visible, setVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
@@ -24,12 +24,14 @@ export default function Home({navigation}) {
   const [addNewPrice, setAddNewPrice] = useState('');
   const [productList, setProductList] = useState([]);
   const [docId, setDocId] = useState('');
-
+  const [userInfo, setUserInfo] = useState();
+  const [initializing, setInitializing] = useState(true);
   // Firestore Datas.
-  const firestoreData = firestore().collection('userId');
+  const firestoreData = firestore().collection(`${userInfo?.uid}`);
 
   // use effects
   useEffect(() => {
+    getUserInfo();
     return firestoreData.onSnapshot(datas => {
       const list = [];
       datas.forEach(data => {
@@ -41,6 +43,7 @@ export default function Home({navigation}) {
         });
       });
       setProductList(list);
+      console.log(list);
     });
   }, []);
 
@@ -48,6 +51,16 @@ export default function Home({navigation}) {
     setVisible(false);
     setEditVisible(false);
     setDocId('');
+  };
+
+  const getUserInfo = () => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  };
+
+  const onAuthStateChanged = userInfo => {
+    setUserInfo(userInfo);
+    if (initializing) setInitializing(false);
   };
 
   const firebaseAdd = async () => {
@@ -67,7 +80,7 @@ export default function Home({navigation}) {
 
   const firebaseDelete = documentId => {
     firestore()
-      .collection('userId')
+      .collection(`${userInfo?.uid}`)
       .doc(documentId)
       .delete()
       .then(() => console.log('deleted successfully'));
@@ -75,7 +88,7 @@ export default function Home({navigation}) {
 
   const firebaseEditProduct = () => {
     firestore()
-      .collection('userId')
+      .collection(`${userInfo?.uid}`)
       .doc(`${docId}`)
       .set({
         product: addNewProduct,
@@ -114,7 +127,6 @@ export default function Home({navigation}) {
 
   return (
     <View style={styles.container}>
-
       <Dialog.Container visible={visible}>
         <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
           Add Product
