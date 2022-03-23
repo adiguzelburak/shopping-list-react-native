@@ -16,7 +16,7 @@ import EditProductButton from '../components/editProductButton';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-export default function Home({route, navigation}) {
+export default function Home({navigation}) {
   //states
   const [visible, setVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
@@ -26,11 +26,16 @@ export default function Home({route, navigation}) {
   const [docId, setDocId] = useState('');
   const [userInfo, setUserInfo] = useState();
   const [initializing, setInitializing] = useState(true);
+
   // Firestore Datas.
   const firestoreData = firestore().collection(`${userInfo?.uid}`);
 
   // use effects
   useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = () => {
     getUserInfo();
     return firestoreData.onSnapshot(datas => {
       const list = [];
@@ -43,9 +48,8 @@ export default function Home({route, navigation}) {
         });
       });
       setProductList(list);
-      console.log(list);
     });
-  }, []);
+  };
 
   const handleCancel = () => {
     setVisible(false);
@@ -73,6 +77,7 @@ export default function Home({route, navigation}) {
       price: addNewPrice,
       isBought: false,
     });
+    fetchProducts();
     setAddNewProduct('');
     setAddNewPrice('');
     setVisible(false);
@@ -83,7 +88,7 @@ export default function Home({route, navigation}) {
       .collection(`${userInfo?.uid}`)
       .doc(documentId)
       .delete()
-      .then(() => console.log('deleted successfully'));
+      .then(() => fetchProducts());
   };
 
   const firebaseEditProduct = () => {
@@ -95,7 +100,7 @@ export default function Home({route, navigation}) {
         price: addNewPrice,
       })
       .then(() => {
-        console.log('Product updated!');
+        fetchProducts();
       });
     setEditVisible(false);
     setDocId('');
@@ -127,131 +132,136 @@ export default function Home({route, navigation}) {
 
   return (
     <View style={styles.container}>
-      <Dialog.Container visible={visible}>
-        <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
-          Add Product
-        </Dialog.Title>
-        <Dialog.Input
-          placeholder="Please enter a product."
-          style={{fontFamily: 'EuclidCircularB-Light'}}
-          underlineColorAndroid={primary}
-          value={addNewProduct}
-          onChangeText={e => setAddNewProduct(e)}
-        />
-        <Dialog.Input
-          placeholder="Please enter a price."
-          style={{
-            fontFamily: 'EuclidCircularB-Light',
-          }}
-          underlineColorAndroid={primary}
-          value={addNewPrice}
-          keyboardType="number-pad"
-          onChangeText={e => setAddNewPrice(e)}
-        />
-        <Dialog.Button
-          label="Add"
-          style={{
-            color: 'white',
-            fontFamily: 'EuclidCircularB-SemiBold',
-            borderRadius: 10,
-            backgroundColor: 'green',
-            marginRight: 10,
-          }}
-          onPress={firebaseAdd}
-        />
-        <Dialog.Button
-          label="Cancel"
-          style={{
-            color: 'white',
-            fontFamily: 'EuclidCircularB-SemiBold',
-            borderRadius: 10,
-            backgroundColor: 'red',
-          }}
-          onPress={handleCancel}
-        />
-      </Dialog.Container>
-
-      <Dialog.Container visible={editVisible}>
-        <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
-          Add Product
-        </Dialog.Title>
-        <Dialog.Input
-          placeholder="Please enter a product."
-          style={{fontFamily: 'EuclidCircularB-Light'}}
-          underlineColorAndroid={primary}
-          value={addNewProduct}
-          onChangeText={e => setAddNewProduct(e)}
-        />
-        <Dialog.Input
-          placeholder="Please enter a price."
-          style={{
-            fontFamily: 'EuclidCircularB-Light',
-          }}
-          underlineColorAndroid={primary}
-          value={addNewPrice}
-          keyboardType="number-pad"
-          onChangeText={e => setAddNewPrice(e)}
-        />
-        <Dialog.Button
-          label="Edit"
-          style={{
-            color: 'white',
-            fontFamily: 'EuclidCircularB-SemiBold',
-            borderRadius: 10,
-            backgroundColor: primary,
-            marginRight: 10,
-          }}
-          onPress={firebaseEditProduct}
-        />
-        <Dialog.Button
-          label="Cancel"
-          style={{
-            color: 'white',
-            fontFamily: 'EuclidCircularB-SemiBold',
-            borderRadius: 10,
-            backgroundColor: 'red',
-          }}
-          onPress={handleCancel}
-        />
-      </Dialog.Container>
-
-      <View style={styles.navbar}>
-        <View>
-          <Text style={styles.title}>Hello,</Text>
-          <Text style={styles.title}>Neo</Text>
-        </View>
-        <AddProductButton onPress={signOut} text="Out" />
-        {/* <AddProductButton onPress={isBoughtCheck} text="ad" /> */}
-      </View>
-
-      {productList.length !== 0 ? (
-        <FlatList
-          data={productList}
-          renderItem={({item}) => (
-            <View style={styles.viewBox}>
-              <TouchableOpacity>
-                <View style={styles.isBoughtButton} />
-              </TouchableOpacity>
-              <Text style={styles.product}>{item.product}</Text>
-              <Text style={styles.price}>{item.price}$</Text>
-              <DeleteProductButton
-                title="Delete"
-                onPress={() => firebaseDelete(item.id)}
-              />
-              <EditProductButton onPress={() => editProductModal(item)} />
-            </View>
-          )}
-        />
-      ) : (
-        <View style={styles.emptyProduct}>
-          <AnimatedLottieView
-            style={styles.emptyProduct}
-            source={require('../assets/animation/empty.json')}
-            autoPlay
-            loop
+      <View style={styles.container}>
+        <Dialog.Container visible={visible}>
+          <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
+            Add Product
+          </Dialog.Title>
+          <Dialog.Input
+            placeholder="Please enter a product."
+            style={{fontFamily: 'EuclidCircularB-Light'}}
+            underlineColorAndroid={primary}
+            value={addNewProduct}
+            onChangeText={e => setAddNewProduct(e)}
           />
+          <Dialog.Input
+            placeholder="Please enter a price."
+            style={{
+              fontFamily: 'EuclidCircularB-Light',
+            }}
+            underlineColorAndroid={primary}
+            value={addNewPrice}
+            keyboardType="number-pad"
+            onChangeText={e => setAddNewPrice(e)}
+          />
+          <Dialog.Button
+            label="Add"
+            style={{
+              color: 'white',
+              fontFamily: 'EuclidCircularB-SemiBold',
+              borderRadius: 10,
+              backgroundColor: 'green',
+              marginRight: 10,
+            }}
+            onPress={firebaseAdd}
+          />
+          <Dialog.Button
+            label="Cancel"
+            style={{
+              color: 'white',
+              fontFamily: 'EuclidCircularB-SemiBold',
+              borderRadius: 10,
+              backgroundColor: 'red',
+            }}
+            onPress={handleCancel}
+          />
+        </Dialog.Container>
+
+        <Dialog.Container visible={editVisible}>
+          <Dialog.Title style={{fontFamily: 'EuclidCircularB-SemiBold'}}>
+            Add Product
+          </Dialog.Title>
+          <Dialog.Input
+            placeholder="Please enter a product."
+            style={{fontFamily: 'EuclidCircularB-Light'}}
+            underlineColorAndroid={primary}
+            value={addNewProduct}
+            onChangeText={e => setAddNewProduct(e)}
+          />
+          <Dialog.Input
+            placeholder="Please enter a price."
+            style={{
+              fontFamily: 'EuclidCircularB-Light',
+            }}
+            underlineColorAndroid={primary}
+            value={addNewPrice}
+            keyboardType="number-pad"
+            onChangeText={e => setAddNewPrice(e)}
+          />
+          <Dialog.Button
+            label="Edit"
+            style={{
+              color: 'white',
+              fontFamily: 'EuclidCircularB-SemiBold',
+              borderRadius: 10,
+              backgroundColor: primary,
+              marginRight: 10,
+            }}
+            onPress={firebaseEditProduct}
+          />
+          <Dialog.Button
+            label="Cancel"
+            style={{
+              color: 'white',
+              fontFamily: 'EuclidCircularB-SemiBold',
+              borderRadius: 10,
+              backgroundColor: 'red',
+            }}
+            onPress={handleCancel}
+          />
+        </Dialog.Container>
+
+        <View style={styles.navbar}>
+          <View>
+            <Text style={styles.title}>Hello,</Text>
+            <Text style={styles.title}>Neo</Text>
+          </View>
+          <EditProductButton onPress={signOut} text="Out" />
+          {/* <AddProductButton onPress={isBoughtCheck} text="ad" /> */}
         </View>
-      )}
+
+        {productList.length !== 0 ? (
+          <FlatList
+            data={productList}
+            renderItem={({item}) => (
+              <View style={styles.viewBox}>
+                <TouchableOpacity>
+                  <View style={styles.isBoughtButton} />
+                </TouchableOpacity>
+                <Text style={styles.product}>{item.product}</Text>
+                <Text style={styles.price}>{item.price}$</Text>
+                <DeleteProductButton
+                  title="Delete"
+                  onPress={() => firebaseDelete(item.id)}
+                />
+                <EditProductButton
+                  onPress={() => editProductModal(item)}
+                  text="Edit"
+                />
+              </View>
+            )}
+          />
+        ) : (
+          <View style={styles.emptyProduct}>
+            <AnimatedLottieView
+              style={styles.emptyProduct}
+              source={require('../assets/animation/empty.json')}
+              autoPlay
+              loop
+            />
+          </View>
+        )}
+      </View>
       <AddProductButton text="➕" onPress={addProductModal} />
     </View>
   );

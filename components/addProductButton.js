@@ -13,6 +13,9 @@ export default function AddProductButton({text, onPress}) {
 
 const styles = StyleSheet.create({
   button: {
+    position: 'relative',
+    bottom: 120,
+    left: 120,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

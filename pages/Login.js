@@ -42,6 +42,8 @@ const Login = ({navigation}) => {
           alert('Does not exist user!');
         } else if (err.code === 'auth/invalid-email') {
           alert('Please enter correct email format!');
+        } else {
+          console.log(err);
         }
       });
   };
